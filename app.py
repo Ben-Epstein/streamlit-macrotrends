@@ -19,8 +19,8 @@ headers = {
 }
 
 
-nasdaq = pd.read_csv(f"{CWD}/assets/nasdaq_screener_1650228647021.csv")[["Symbol", "Name"]]
-nyse = pd.read_csv(f"{CWD}/assets/NYSE.csv")[["Symbol", "Name"]]
+nasdaq = pd.read_csv(f"{CWD}/nasdaq_screener_1650228647021.csv")[["Symbol", "Name"]]
+nyse = pd.read_csv(f"{CWD}/NYSE.csv")[["Symbol", "Name"]]
 all_stocks = pd.concat([nasdaq, nyse])
 
 
