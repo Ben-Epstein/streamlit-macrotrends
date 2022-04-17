@@ -49,9 +49,12 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     return df_merged
 
 
+symbols = all_stocks.Symbol.tolist()
+symbols.remove("JPM")
+symbols = ["JPM"] + symbols
 sym = st.selectbox(
     'Pick a stock',
-    all_stocks.Symbol.tolist()
+    symbols
 )
 
 st.write('You selected:\n', all_stocks[all_stocks["Symbol"]==sym])
@@ -66,6 +69,7 @@ if sym:
     if df is None:
         st.warning(f"It seems data for {sym} is not available. Try another stock.")
     else:
+
         st.download_button(
            "Download",
            df.to_csv(),
@@ -74,3 +78,11 @@ if sym:
            key='download-csv'
         )
         st.write(df)
+        
+        # Line chart
+        all_cols = df.columns
+        viz = st.multiselect("Pick a column to visualize", all_cols, default=all_cols[0])
+
+        line_data = df[viz]
+        st.line_chart(line_data)
+        
