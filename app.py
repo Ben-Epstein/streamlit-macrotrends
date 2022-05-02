@@ -26,6 +26,9 @@ nasdaq = pd.read_csv(f"{CWD}/nasdaq_screener_1650228647021.csv")[["Symbol", "Nam
 nyse = pd.read_csv(f"{CWD}/NYSE.csv")[["Symbol", "Name"]]
 all_stocks = pd.concat([nasdaq, nyse])
 
+cols_df = pd.read_csv("f"{CWD}/cols_needed.csv")
+use_cols = set(cols_df[cols_df["need"]=="y"].col.values)
+
 
 @st.cache
 def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
@@ -46,7 +49,8 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
             df_merged = df
         else:
             df_merged = df_merged.merge(df, left_index=True, right_index=True)
-    return df_merged
+    cols = [c for c in df_merged.columns if c in use_cols]
+    return df_merged[cols]
 
 
 symbols = all_stocks.Symbol.tolist()
