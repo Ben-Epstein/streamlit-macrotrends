@@ -33,7 +33,7 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     for data in DATAS:
         data_res = requests.get(f"{url}/{data}/{sym.replace('/','.')}?freq=Q", headers=headers)
         if data_res.status_code != 200:
-            return
+            continue
         df = pd.DataFrame(data_res.json())
         for c, dt in zip(list(df.columns), df.dtypes):
             if dt == "object":
