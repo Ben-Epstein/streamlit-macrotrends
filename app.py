@@ -26,7 +26,7 @@ nasdaq = pd.read_csv(f"{CWD}/nasdaq_screener_1650228647021.csv")[["Symbol", "Nam
 nyse = pd.read_csv(f"{CWD}/NYSE.csv")[["Symbol", "Name"]]
 all_stocks = pd.concat([nasdaq, nyse])
 
-cols_df = pd.read_csv("f"{CWD}/cols_needed.csv")
+cols_df = pd.read_csv(f"{CWD}/cols_needed.csv")
 use_cols = set(cols_df[cols_df["need"]=="y"].col.values)
 
 
