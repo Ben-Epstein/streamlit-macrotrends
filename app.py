@@ -9,8 +9,8 @@ import numpy as np
 CWD = os.getcwd()
 url = "https://macrotrends-finance.p.rapidapi.com"
 
-FIS = "financial-income-statement"
-FBS = "financial-balance-sheet"
+FIS = "income-statement"
+FBS = "balance-statement"
 FCS = "financial-cash-statement"
 FKR = "financial-key-ratios"
 
