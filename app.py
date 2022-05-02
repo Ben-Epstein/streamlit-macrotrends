@@ -31,7 +31,7 @@ all_stocks = pd.concat([nasdaq, nyse])
 def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     dfs = []
     for data in DATAS:
-        data_res = requests.get(f"{url}/{data}/{sym.replace('/','.')}", headers=headers)
+        data_res = requests.get(f"{url}/{data}/{sym.replace('/','.')}?freq=Q", headers=headers)
         if data_res.status_code != 200:
             return
         df = pd.DataFrame(data_res.json())
