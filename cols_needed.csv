@@ -1,0 +1,47 @@
+,col,need
+0,Date,y
+1,Revenue,y
+2,Cost Of Goods Sold,n
+3,Gross Profit,n
+4,Research And Development Expenses,y
+5,SG&A Expenses,n
+6,Other Operating Income Or Expenses,n
+7,Operating Expenses,n
+8,Operating Income,n
+9,Total Non-Operating Income/Expense,n
+10,Pre-Tax Income,y
+11,Income Taxes,n
+12,Income After Taxes,n
+13,Other Income,n
+14,Income From Continuous Operations,n
+15,Income From Discontinued Operations,n
+16,Net Income,y
+17,EBITDA,y
+18,EBIT,y
+19,Basic Shares Outstanding,y
+20,Shares Outstanding,y
+21,Basic EPS,y
+22,EPS - Earnings Per Share,y
+23,Cash On Hand,y
+24,Receivables,y
+25,Inventory,y
+26,Pre-Paid Expenses,n
+27,Other Current Assets,n
+28,Total Current Assets,n
+29,"Property, Plant, And Equipment",y
+30,Long-Term Investments,n
+31,Goodwill And Intangible Assets,y
+32,Other Long-Term Assets,n
+33,Total Long-Term Assets,n
+34,Total Assets,y
+35,Total Current Liabilities,n
+36,Long Term Debt,n
+37,Other Non-Current Liabilities,n
+38,Total Long Term Liabilities,y
+39,Total Liabilities,y
+40,Common Stock Net,n
+41,Retained Earnings (Accumulated Deficit),y
+42,Comprehensive Income,n
+43,Other Share Holders Equity,n
+44,Share Holder Equity,n
+45,Total Liabilities And Share Holders Equity,n
