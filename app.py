@@ -1,24 +1,24 @@
-
-import streamlit as st
+import os
 from typing import Optional
+
+import numpy as np
 import pandas as pd
 import requests
-import os
-import numpy as np
+import streamlit as st
 
 CWD = os.getcwd()
 url = "https://macrotrends-finance.p.rapidapi.com"
 
-FIS = "income-statement"
-FBS = "balance-statement"
-FCS = "financial-cash-statement"
-FKR = "financial-key-ratios"
+FIS = "statements/income"
+FBS = "statements/balance"
+FCS = "statements/cash"
+# FKR = "financial-key-ratios"
 
-DATAS = [FIS, FBS, FCS, FKR]
+DATAS = [FIS, FBS, FCS]
 
 headers = {
     "X-RapidAPI-Host": "macrotrends-finance.p.rapidapi.com",
-    "X-RapidAPI-Key": os.environ["API_KEY"]
+    "X-RapidAPI-Key": os.environ["API_KEY"],
 }
 
 
@@ -27,14 +27,15 @@ nyse = pd.read_csv(f"{CWD}/NYSE.csv")[["Symbol", "Name"]]
 all_stocks = pd.concat([nasdaq, nyse])
 
 cols_df = pd.read_csv(f"{CWD}/cols_needed.csv")
-use_cols = set(cols_df[cols_df["need"]=="y"].col.values)
+use_cols = set(cols_df[cols_df["need"] == "y"].col.values)
 
 
 @st.cache
 def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     dfs = []
     for data in DATAS:
-        data_res = requests.get(f"{url}/{data}/{sym.replace('/','.')}?freq=Q", headers=headers)
+        params = {"freq": "Q", "symbol": sym.replace("/", ".")}
+        data_res = requests.get(f"{url}/{data}", params=params, headers=headers)
         if data_res.status_code != 200:
             continue
         df = pd.DataFrame(data_res.json())
@@ -42,7 +43,7 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
             if dt == "object":
                 df[c] = df[c].replace("", np.nan)
         dfs.append(df)
-    
+
     df_merged = None
     for df in dfs:
         if df_merged is None:
@@ -56,12 +57,9 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
 symbols = all_stocks.Symbol.tolist()
 symbols.remove("JPM")
 symbols = ["JPM"] + symbols
-sym = st.selectbox(
-    'Pick a stock',
-    symbols
-)
+sym = st.selectbox("Pick a stock", symbols)
 
-st.write('You selected:\n', all_stocks[all_stocks["Symbol"]==sym])
+st.write("You selected:\n", all_stocks[all_stocks["Symbol"] == sym])
 
 st.write("Gathering Balance Sheet information...")
 
@@ -75,18 +73,15 @@ if sym:
     else:
 
         st.download_button(
-           "Download",
-           df.to_csv(),
-           f"{sym}.csv",
-           "text/csv",
-           key='download-csv'
+            "Download", df.to_csv(), f"{sym}.csv", "text/csv", key="download-csv"
         )
         st.write(df)
-        
+
         # Line chart
         all_cols = df.columns
-        viz = st.multiselect("Pick a column to visualize", all_cols, default=all_cols[0])
+        viz = st.multiselect(
+            "Pick a column to visualize", all_cols, default=all_cols[0]
+        )
 
         line_data = df[viz]
         st.line_chart(line_data)
-        

@@ -1,47 +1,76 @@
 ,col,need
-0,Date,y
+0,date,y
 1,Revenue,y
-2,Cost Of Goods Sold,n
-3,Gross Profit,n
-4,Research And Development Expenses,y
-5,SG&A Expenses,n
-6,Other Operating Income Or Expenses,n
-7,Operating Expenses,n
-8,Operating Income,n
-9,Total Non-Operating Income/Expense,n
-10,Pre-Tax Income,y
-11,Income Taxes,n
-12,Income After Taxes,n
-13,Other Income,n
-14,Income From Continuous Operations,n
-15,Income From Discontinued Operations,n
-16,Net Income,y
+2,Cost-Of-Goods-Sold,n
+3,Gross-Profit,n
+4,Research-And-Development-Expenses,y
+5,SG&A-Expenses,n
+6,Other-Operating-Income-Or-Expenses,n
+7,Operating-Expenses,n
+8,Operating-Income,n
+9,Total-Non-Operating-Income/Expense,n
+10,Pre-Tax-Income,y
+11,Income-Taxes,n
+12,Income-After-Taxes,n
+13,Other-Income,n
+14,Income-From-Continuous-Operations,n
+15,Income-From-Discontinued-Operations,n
+16,Net-Income,y
 17,EBITDA,y
 18,EBIT,y
-19,Basic Shares Outstanding,y
-20,Shares Outstanding,y
-21,Basic EPS,y
-22,EPS - Earnings Per Share,y
-23,Cash On Hand,y
+19,Basic-Shares-Outstanding,y
+20,Shares-Outstanding,y
+21,Basic-EPS,y
+22,EPS---Earnings-Per-Share,y
+23,Cash-On-Hand,y
 24,Receivables,y
 25,Inventory,y
-26,Pre-Paid Expenses,n
-27,Other Current Assets,n
-28,Total Current Assets,n
-29,"Property, Plant, And Equipment",y
-30,Long-Term Investments,n
-31,Goodwill And Intangible Assets,y
-32,Other Long-Term Assets,n
-33,Total Long-Term Assets,n
-34,Total Assets,y
-35,Total Current Liabilities,n
-36,Long Term Debt,n
-37,Other Non-Current Liabilities,n
-38,Total Long Term Liabilities,y
-39,Total Liabilities,y
-40,Common Stock Net,n
-41,Retained Earnings (Accumulated Deficit),y
-42,Comprehensive Income,n
-43,Other Share Holders Equity,n
-44,Share Holder Equity,n
-45,Total Liabilities And Share Holders Equity,n
+26,Pre-Paid-Expenses,n
+27,Other-Current-Assets,n
+28,Total-Current-Assets,n
+29,"Property,-Plant,-And-Equipment",y
+30,Long-Term-Investments,n
+31,Goodwill-And-Intangible-Assets,y
+32,Other-Long-Term-Assets,n
+33,Total-Long-Term-Assets,n
+34,Total-Assets,y
+35,Total-Current-Liabilities,n
+36,Long-Term-Debt,n
+37,Other-Non-Current-Liabilities,n
+38,Total-Long-Term-Liabilities,y
+39,Total-Liabilities,y
+40,Common-Stock-Net,n
+41,Retained-Earnings-(Accumulated-Deficit),y
+42,Comprehensive-Income,n
+43,Other-Share-Holders-Equity,n
+44,Share-Holder-Equity,n
+45,Total-Liabilities-And-Share-Holders-Equity,n
+46,Net-Income/Loss,n
+47,Total-Depreciation-And-Amortization---Cash-Flow,n
+48,Other-Non-Cash-Items,n
+49,Total-Non-Cash-Items,n
+50,Change-In-Accounts-Receivable,n
+51,Change-In-Inventories,n
+52,Change-In-Accounts-Payable,n
+53,Change-In-Assets/Liabilities,n
+54,Total-Change-In-Assets/Liabilities,n
+55,Cash-Flow-From-Operating-Activities,n
+56,"Net-Change-In-Property,-Plant,-And-Equipment",n
+57,Net-Change-In-Intangible-Assets,n
+58,Net-Acquisitions/Divestitures,n
+59,Net-Change-In-Short-term-Investments,n
+60,Net-Change-In-Long-Term-Investments,n
+61,Net-Change-In-Investments---Total,n
+62,Investing-Activities---Other,n
+63,Cash-Flow-From-Investing-Activities,n
+64,Net-Long-Term-Debt,n
+65,Net-Current-Debt,n
+66,Debt-Issuance/Retirement-Net---Total,n
+67,Net-Common-Equity-Issued/Repurchased,n
+68,Net-Total-Equity-Issued/Repurchased,n
+69,Total-Common-And-Preferred-Stock-Dividends-Paid,n
+70,Financial-Activities---Other,n
+71,Cash-Flow-From-Financial-Activities,n
+72,Net-Cash-Flow,n
+73,Stock-Based-Compensation,y
+74,Common-Stock-Dividends-Paid,y
