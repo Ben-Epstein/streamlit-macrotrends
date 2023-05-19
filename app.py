@@ -64,7 +64,7 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
         else:
             df_merged = df_merged.merge(df, left_index=True, right_index=True)
     price_params = {"symbol": sym.replace("/", "."), "range":'15y'}
-    data_res = requests.get(f"{url}/{PRICES}", params=params, headers=headers)
+    data_res = requests.get(f"{url}/{PRICES}", params=price_params, headers=headers)
     if data_res.status_code == 200:
         df_prices = pd.DataFrame(data_res.json()).set_index("Date")
         # Some reports come on the weekend. Move to friday so we can merge with 
