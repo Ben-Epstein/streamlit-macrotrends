@@ -14,7 +14,7 @@ FBS = "statements/balance"
 FCS = "statements/cash"
 PRICES = "quotes/history-price"
 
-DATAS = [FIS, FBS, FCS, PRICES]
+DATAS = [FIS, FBS, FCS]#, PRICES]
 
 headers = {
     "X-RapidAPI-Host": "macrotrends-finance.p.rapidapi.com",
