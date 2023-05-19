@@ -30,6 +30,17 @@ cols_df = pd.read_csv(f"{CWD}/cols_needed.csv")
 use_cols = set(cols_df[cols_df["need"] == "y"].col.values)
 
 
+def to_friday(row):
+    """Convert weekend to friday for matching with price history"""
+    dt = datetime.strptime(row, '%Y-%m-%d')
+    weekday = dt.weekday()
+    if weekday == 6:
+        dt = dt - timedelta(days=2)
+    elif weekday == 5:
+        dt = dt - timedelta(days=1)
+    return dt.strftime('%Y-%m-%d')
+
+
 @st.cache
 def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     dfs = []
@@ -50,6 +61,14 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
             df_merged = df
         else:
             df_merged = df_merged.merge(df, left_index=True, right_index=True)
+    price_params = {"symbol": sym.replace("/", "."), "range":'15y'}
+    data_res = requests.get(f"{url}/{PRICES}", params=params, headers=headers)
+    if data_res.status_code == 200:
+        df_prices = pd.DataFrame(data_res.json()).set_index("Date")
+        # Some reports come on the weekend. Move to friday so we can merge with 
+        # the closing dates
+        df_merged.index = df_merged.index.map(to_friday)
+        df_merged = df_merged.merge(df_prices, left_index=True, right_index=True, how="left")
     cols = [c for c in df_merged.columns if c in use_cols]
     return df_merged[cols]
 
