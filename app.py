@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 import requests
 import streamlit as st
+from datetime import datetime, timedelta
+
 
 CWD = os.getcwd()
 url = "https://macrotrends-finance.p.rapidapi.com"
