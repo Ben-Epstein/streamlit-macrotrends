@@ -12,9 +12,9 @@ url = "https://macrotrends-finance.p.rapidapi.com"
 FIS = "statements/income"
 FBS = "statements/balance"
 FCS = "statements/cash"
-# FKR = "financial-key-ratios"
+PRICES = "quotes/history-price"
 
-DATAS = [FIS, FBS, FCS]
+DATAS = [FIS, FBS, FCS, PRICES]
 
 headers = {
     "X-RapidAPI-Host": "macrotrends-finance.p.rapidapi.com",
