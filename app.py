@@ -43,7 +43,7 @@ def to_friday(row):
     return dt.strftime('%Y-%m-%d')
 
 
-@st.cache
+@st.cache_data
 def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     dfs = []
     for data in DATAS:
