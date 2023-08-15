@@ -1,3 +1,4 @@
+import json
 import os
 from typing import Optional
 
@@ -28,6 +29,8 @@ nasdaq = pd.read_csv(f"{CWD}/nasdaq_screener_1650228647021.csv")[["Symbol", "Nam
 nyse = pd.read_csv(f"{CWD}/NYSE.csv")[["Symbol", "Name"]]
 all_stocks = pd.concat([nasdaq, nyse])
 
+with open("col_order.json") as f:
+    col_order = json.load(f)
 cols_df = pd.read_csv(f"{CWD}/cols_needed.csv")
 use_cols = set(cols_df[cols_df["need"] == "y"].col.values)
 
@@ -71,7 +74,7 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
         # the closing dates
         df_merged.index = df_merged.index.map(to_friday)
         df_merged = df_merged.merge(df_prices, left_index=True, right_index=True, how="left")
-    cols = [c for c in df_merged.columns if c in use_cols]
+    cols = [c for c in col_order if c in df_merged.columns and c in use_cols]
     return df_merged[cols]
 
 
