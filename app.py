@@ -6,9 +6,39 @@ import numpy as np
 import pandas as pd
 import requests
 import streamlit as st
+import base64
 from datetime import datetime, timedelta
 
 
+# Fun background stuff 
+from PIL import Image
+import io
+st.title("👋🏻 It's almost Ma's birthday. Did you get your wine and ice cream?")
+background_image = "birthday.webp"
+image = Image.open(background_image)
+opacity = 85  # 128 is 50%
+image.putalpha(opacity)
+# new_image = Image.new('RGBA', image.size, (255, 255, 255, opacity))
+# new_image.paste(image, (0, 0), image)
+buffered = io.BytesIO()
+# new_image.save(buffered, format='PNG')
+image.save(buffered, format='PNG')
+
+st.markdown(
+    f"""
+    <style>
+    .stApp {{
+        
+        background: url(data:image/jpeg;base64,{base64.b64encode(buffered.getvalue()).decode()});
+        background-size: cover;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# Actual app
 CWD = os.getcwd()
 url = "https://macrotrends-finance.p.rapidapi.com"
 
