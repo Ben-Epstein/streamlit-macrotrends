@@ -91,8 +91,11 @@ def get_chromedriver_path():
 
 @st.cache_resource 
 def get_driver():
-    os.system('sbase install chromedriver -p')
-    os.system('ln -s /usr/local/bin/chromedriver /home/appuser/venv/bin/chromedriver')
+    os.system("wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/119.0.6045.105/linux64/chromedriver-linux64.zip")
+    os.system("unzip chromedriver-linux64.zip")
+    os.system("ln -s chromedriver-linux64.zip /home/appuser/venv/bin/chromedriver")
+    # os.system('sbase install chromedriver -p')
+    # os.system('ln -s /usr/local/bin/chromedriver /home/appuser/venv/bin/chromedriver')
     # os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
     return Driver(browser="chrome", uc=True, headless=True)#, binary_location=get_chromedriver_path())
     # return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
