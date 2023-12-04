@@ -1,0 +1,6 @@
+pandas
+requests
+selenium
+seleniumbase
+undetected-chromedriver
+beautifulsoup4

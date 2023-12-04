@@ -8,12 +8,22 @@ import requests
 import streamlit as st
 import base64
 from datetime import datetime, timedelta
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options 
+import json
+import re
+import requests
+import pandas as pd
+from bs4 import BeautifulSoup
+from typing import Optional
+from time import sleep
+import undetected_chromedriver as uc
+from seleniumbase import Driver
 
 
 # Fun background stuff 
 # from PIL import Image
 # import io
-#st.title("👋🏻 It's almost Ma's birthday. Did you get your wine and ice cream?")
 st.title("🤖 Think-O-Meter Inc.")
 # background_image = "birthday.webp"
 # image = Image.open(background_image)
@@ -38,87 +48,103 @@ st.title("🤖 Think-O-Meter Inc.")
 
 # Actual app
 CWD = os.getcwd()
-url = "https://macrotrends-finance.p.rapidapi.com"
+# Reload the tickers (symbols.json)
+# ticker_url = "https://www.macrotrends.net/assets/php/ticker_search_list.php?_=1701641275073"
+# headers = {
+#     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36',
+# }
+# ticker_data = requests.get(ticker_url, headers=headers)
 
-FIS = "statements/income"
-FBS = "statements/balance"
-FCS = "statements/cash"
-PRICES = "quotes/history-price"
 
-DATAS = [FIS, FBS, FCS]#, PRICES]
-
-headers = {
-    "X-RapidAPI-Host": "macrotrends-finance.p.rapidapi.com",
-    "X-RapidAPI-Key": os.environ["API_KEY"],
+LINKS = {
+    "https://www.macrotrends.net/stocks/charts/{symbol}/balance-sheet?freq=Q": "balance_sheet",
+    "https://www.macrotrends.net/stocks/charts/{symbol}/cash-flow-statement?freq=Q": "cash_flow",
+    "https://www.macrotrends.net/stocks/charts/{symbol}/income-statement?freq=Q": "income_statement"
 }
+with open("symbols.json", "r") as f:
+    SYMBOLS = json.load(f)
 
+with open("macrotrends_to_cols.json", "r") as f:
+    COL_MAPPER = json.load(f)
 
-nasdaq = pd.read_csv(f"{CWD}/nasdaq_screener_1650228647021.csv")[["Symbol", "Name"]]
-nyse = pd.read_csv(f"{CWD}/NYSE.csv")[["Symbol", "Name"]]
-all_stocks = pd.concat([nasdaq, nyse])
 
 with open("col_order.json") as f:
-    col_order = json.load(f)
-cols_df = pd.read_csv(f"{CWD}/cols_needed.csv")
-use_cols = set(cols_df[cols_df["need"] == "y"].col.values)
+    COL_ORDER = json.load(f)
 
 
-def to_friday(row):
-    """Convert weekend to friday for matching with price history"""
-    dt = datetime.strptime(row, '%Y-%m-%d')
-    weekday = dt.weekday()
-    if weekday == 6:
-        dt = dt - timedelta(days=2)
-    elif weekday == 5:
-        dt = dt - timedelta(days=1)
-    return dt.strftime('%Y-%m-%d')
+COLS_DF = pd.read_csv(f"{CWD}/cols_needed.csv")
+USE_COLS = set(COLS_DF[COLS_DF["need"] == "y"].col.values)
+DRIVER = Driver(uc=True, headless=True)
+
+
+def extract_a_tag(html: str) -> Optional[str]:
+    try:
+        soup = BeautifulSoup(html, 'html.parser')
+        return soup.a.text
+    except AttributeError:
+        return None
 
 
 @st.cache_data(persist=False)
 def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
+    progress_text = f"Loading data for {sym}. Please wait."
+    progress = 0
+    progress_bar = st.progress(0, text=progress_text) 
     dfs = []
-    for data in DATAS:
-        params = {"freq": "Q", "symbol": sym.replace("/", ".")}
-        data_res = requests.get(f"{url}/{data}", params=params, headers=headers)
-        if data_res.status_code != 200:
+    for link, data_type in LINKS.items():
+        progress_text = f"Loading {data_type.replace('_', ' ')} for {sym}. Please wait."
+        progress_bar.progress(progress, text=progress_text)
+        print("Getting", data_type)
+        DRIVER.get(link.format(symbol=sym))
+        print("Sleeping for 3")
+        sleep(3)
+        print("Awake")
+        html_content = DRIVER.page_source
+        json_match = re.search(r'var originalData = \[(.*?)\];', html_content, re.DOTALL)
+        print("Looking for table data")
+        if not json_match:
+            print("Couldn't find it")
             continue
-        df = pd.DataFrame(data_res.json())
-        for c, dt in zip(list(df.columns), df.dtypes):
-            if dt == "object":
-                df[c] = df[c].replace("", np.nan)
+        print("Found it!")
+        progress += 15
+        progress_bar.progress(progress, text=progress_text)
+        data = json.loads(f"[{json_match.group(1)}]")
+        print("Loaded json")
+        df = pd.DataFrame(data)
+        if 'popup_icon' in df.columns:
+            df.pop('popup_icon')
+        print("Got DF")
+        df["field_name"] = df['field_name'].apply(extract_a_tag)
+        df = df.dropna(subset=['field_name'])
+        df = df.set_index("field_name").T
+        df = df.rename_axis("Date")
         dfs.append(df)
+        print("Added", data_type)
+        progress += 15
+        progress_bar.progress(progress, text=progress_text)
+        
+    df_merged = dfs[0]
+    for df_ in dfs[1:]:
+        df_merged = df_merged.merge(df_, left_index=True, right_index=True)
+    df_merged = df_merged.rename(columns=COL_MAPPER)
+    cols = [c for c in COL_ORDER if c in df_merged.columns and c in USE_COLS]
+    df_merged = df_merged.fillna(np.nan)
+    for c in df_merged.columns:
+        df_merged.loc[df_merged[c]=="", c] = np.nan
+        df_merged[c] = df_merged[c].astype(float)
+    progress_bar.progress(100)
+    return df_merged
+    
 
-    df_merged = None
-    for df in dfs:
-        if df_merged is None:
-            df_merged = df
-        else:
-            df_merged = df_merged.merge(df, left_index=True, right_index=True)
-    price_params = {"symbol": sym.replace("/", "."), "range":'15y'}
-    data_res = requests.get(f"{url}/{PRICES}", params=price_params, headers=headers)
-    if data_res.status_code == 200:
-        df_prices = pd.DataFrame(data_res.json()).set_index("Date")
-        # Some reports come on the weekend. Move to friday so we can merge with 
-        # the closing dates
-        df_merged.index = df_merged.index.map(to_friday)
-        df_merged = df_merged.merge(df_prices, left_index=True, right_index=True, how="left")
-    cols = [c for c in col_order if c in df_merged.columns and c in use_cols]
-    return df_merged[cols]
 
+SYMBOLS.remove("JPM/jpmorgan-chase")
+SYMBOLS = ["JPM/jpmorgan-chase"] + SYMBOLS
+sym = st.selectbox("Pick a stock", SYMBOLS)
 
-symbols = all_stocks.Symbol.tolist()
-symbols.remove("JPM")
-symbols = ["JPM"] + symbols
-sym = st.selectbox("Pick a stock", symbols)
-
-st.write("You selected:\n", all_stocks[all_stocks["Symbol"] == sym])
-
-st.write("Gathering Balance Sheet information...")
+st.write("You selected:\n", sym)
 
 
 if sym:
-    st.write(sym)
-
     df = get_stock_info(sym)
     if df is None:
         st.warning(f"It seems data for {sym} is not available. Try another stock.")

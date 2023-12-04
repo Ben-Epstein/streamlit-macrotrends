@@ -1,1 +1,4 @@
 .ipynb_checkpoints
+.venv
+*.pkg
+__pycache__
