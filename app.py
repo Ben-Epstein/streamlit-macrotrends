@@ -1,6 +1,7 @@
 import json
 import os
 from typing import Optional
+import shutil
 
 import numpy as np
 import pandas as pd
@@ -83,11 +84,14 @@ def extract_a_tag(html: str) -> Optional[str]:
         return None
 
 
+@st.cache_resource(show_spinner=False)
+def get_chromedriver_path():
+    return shutil.which('chromedriver')
+
+
 @st.cache_resource 
 def get_driver():
-    os.system('sbase install geckodriver')
-    os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
-    return Driver(browser="firefox", uc=True, headless=True, )
+    return Driver(uc=True, headless=True, binary_location=get_chromedriver_path())
     # return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 
