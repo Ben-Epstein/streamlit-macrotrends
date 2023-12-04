@@ -9,7 +9,6 @@ import streamlit as st
 import base64
 from datetime import datetime, timedelta
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options 
 import json
 import re
 import requests
@@ -17,9 +16,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from typing import Optional
 from time import sleep
-import undetected_chromedriver as uc
 from seleniumbase import Driver
-from webdriver_manager.chrome import ChromeDriverManager
 
 
 # Fun background stuff 
@@ -88,8 +85,9 @@ def extract_a_tag(html: str) -> Optional[str]:
 
 @st.cache_resource 
 def get_driver():
-    service = ChromeDriverManager().install()
-    return Driver(uc=True, headless=True)
+    os.system('sbase install geckodriver')
+    os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
+    return Driver(browser="firefox", uc=True, headless=True, )
     # return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 
