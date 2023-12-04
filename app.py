@@ -19,6 +19,7 @@ from typing import Optional
 from time import sleep
 import undetected_chromedriver as uc
 from seleniumbase import Driver
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 # Fun background stuff 
@@ -74,7 +75,7 @@ with open("col_order.json") as f:
 
 COLS_DF = pd.read_csv(f"{CWD}/cols_needed.csv")
 USE_COLS = set(COLS_DF[COLS_DF["need"] == "y"].col.values)
-DRIVER = Driver(uc=True, headless=True)
+# DRIVER = Driver(uc=True, headless=True)
 
 
 def extract_a_tag(html: str) -> Optional[str]:
@@ -85,12 +86,20 @@ def extract_a_tag(html: str) -> Optional[str]:
         return None
 
 
+@st.cache_resource 
+def get_driver():
+    service = ChromeDriverManager().install()
+    return Driver(uc=True, headless=True)
+    # return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+
 @st.cache_data(persist=False)
 def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     progress_text = f"Loading data for {sym}. Please wait."
     progress = 0
     progress_bar = st.progress(0, text=progress_text) 
     dfs = []
+    DRIVER = get_driver()
     for link, data_type in LINKS.items():
         progress_text = f"Loading {data_type.replace('_', ' ')} for {sym}. Please wait."
         progress_bar.progress(progress, text=progress_text)

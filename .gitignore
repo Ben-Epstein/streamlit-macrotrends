@@ -2,3 +2,4 @@
 .venv
 *.pkg
 __pycache__
+downloaded_files

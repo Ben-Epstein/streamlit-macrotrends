@@ -1,4 +1,5 @@
 pandas
+webdriver_manager
 requests
 selenium
 seleniumbase
