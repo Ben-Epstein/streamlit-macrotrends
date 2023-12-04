@@ -91,17 +91,20 @@ def get_chromedriver_path():
 
 @st.cache_resource 
 def get_driver():
-    return Driver(uc=True, headless=True, binary_location=get_chromedriver_path())
+    return Driver(browser="chrome", uc=True, headless=True)#, binary_location=get_chromedriver_path())
     # return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 
 @st.cache_data(persist=False)
 def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
+    print("Getting stock info")
     progress_text = f"Loading data for {sym}. Please wait."
     progress = 0
     progress_bar = st.progress(0, text=progress_text) 
     dfs = []
+    print("Getting driver")
     DRIVER = get_driver()
+    print("Got driver")
     for link, data_type in LINKS.items():
         progress_text = f"Loading {data_type.replace('_', ' ')} for {sym}. Please wait."
         progress_bar.progress(progress, text=progress_text)
