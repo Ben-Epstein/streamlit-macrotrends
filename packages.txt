@@ -1,2 +1,4 @@
 chromium
+wget
+unzip
 chromium-driver
