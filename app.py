@@ -91,7 +91,7 @@ def get_chromedriver_path():
 
 @st.cache_resource 
 def get_driver():
-    os.system('sbase install chromedriver')
+    os.system('sbase install chromedriver -p /home/appuser/venv/bin/chromedriver')
     # os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
     return Driver(browser="chrome", uc=True, headless=True)#, binary_location=get_chromedriver_path())
     # return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
