@@ -142,7 +142,7 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     st.write("Getting driver")
     # DRIVER = get_driver()
     DRIVER = webdriver.Chrome(options=get_webdriver_options(), service=get_webdriver_service())
-    st.write("Got driver!")
+    st.write(f"Got driver! {DRIVER}")
     for link, data_type in LINKS.items():
         st.write(f"Getting {data_type}")
         progress_text = f"Loading {data_type.replace('_', ' ')} for {sym}. Please wait."
