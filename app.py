@@ -124,37 +124,37 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     with SB(uc=True) as DRIVER:
         print("Got driver!")
         for link, data_type in LINKS.items():
-        progress_text = f"Loading {data_type.replace('_', ' ')} for {sym}. Please wait."
-        progress_bar.progress(progress, text=progress_text)
-        print("Getting", data_type)
-        DRIVER.get(link.format(symbol=sym))
-        print("Sleeping for 3")
-        sleep(3)
-        print("Awake")
-        html_content = DRIVER.page_source
-        st.write(f"HTML CONTENT:\n\n{html_content}\n\n")
-        json_match = re.search(r'var originalData = \[(.*?)\];', html_content, re.DOTALL)
-        print("Looking for table data")
-        if not json_match:
-            print("Couldn't find it")
-            continue
-        print("Found it!")
-        progress += 15
-        progress_bar.progress(progress, text=progress_text)
-        data = json.loads(f"[{json_match.group(1)}]")
-        print("Loaded json")
-        df = pd.DataFrame(data)
-        if 'popup_icon' in df.columns:
-            df.pop('popup_icon')
-        print("Got DF")
-        df["field_name"] = df['field_name'].apply(extract_a_tag)
-        df = df.dropna(subset=['field_name'])
-        df = df.set_index("field_name").T
-        df = df.rename_axis("Date")
-        dfs.append(df)
-        print("Added", data_type)
-        progress += 15
-        progress_bar.progress(progress, text=progress_text)
+            progress_text = f"Loading {data_type.replace('_', ' ')} for {sym}. Please wait."
+            progress_bar.progress(progress, text=progress_text)
+            print("Getting", data_type)
+            DRIVER.get(link.format(symbol=sym))
+            print("Sleeping for 3")
+            sleep(3)
+            print("Awake")
+            html_content = DRIVER.page_source
+            st.write(f"HTML CONTENT:\n\n{html_content}\n\n")
+            json_match = re.search(r'var originalData = \[(.*?)\];', html_content, re.DOTALL)
+            print("Looking for table data")
+            if not json_match:
+                print("Couldn't find it")
+                continue
+            print("Found it!")
+            progress += 15
+            progress_bar.progress(progress, text=progress_text)
+            data = json.loads(f"[{json_match.group(1)}]")
+            print("Loaded json")
+            df = pd.DataFrame(data)
+            if 'popup_icon' in df.columns:
+                df.pop('popup_icon')
+            print("Got DF")
+            df["field_name"] = df['field_name'].apply(extract_a_tag)
+            df = df.dropna(subset=['field_name'])
+            df = df.set_index("field_name").T
+            df = df.rename_axis("Date")
+            dfs.append(df)
+            print("Added", data_type)
+            progress += 15
+            progress_bar.progress(progress, text=progress_text)
     print("Done with loop")
     if not dfs:
         st.warning(str(shutil.which("chromedriver")))
