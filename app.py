@@ -139,11 +139,12 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     progress = 0
     progress_bar = st.progress(0, text=progress_text) 
     dfs = []
-    print("Getting driver")
+    st.write("Getting driver")
     # DRIVER = get_driver()
     DRIVER = webdriver.Chrome(options=get_webdriver_options(), service=get_webdriver_service())
-    print("Got driver!")
+    st.write("Got driver!")
     for link, data_type in LINKS.items():
+        st.write(f"Getting {data_type}")
         progress_text = f"Loading {data_type.replace('_', ' ')} for {sym}. Please wait."
         progress_bar.progress(progress, text=progress_text)
         print("Getting", data_type)
@@ -176,7 +177,7 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
         progress_bar.progress(progress, text=progress_text)
     print("Done with loop")
     if not dfs:
-        st.warning(str(os.popen("which streamlit").read())) 
+        st.warning(str(shutil.which("chromedriver")) 
         return
     df_merged = dfs[0]
     for df_ in dfs[1:]:
