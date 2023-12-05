@@ -26,6 +26,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 import undetected_chromedriver as uc
+from seleniumbase import SB
 
 
 
@@ -109,30 +110,6 @@ def extract_a_tag(html: str) -> Optional[str]:
 #     # return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 
-@st.cache_resource(show_spinner=False)
-def get_chromedriver_path():
-    return shutil.which('chromedriver')
-
-
-@st.cache_resource(show_spinner=False)
-def get_webdriver_options():
-    options = Options()
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--disable-features=NetworkService")
-    options.add_argument("--window-size=1920x1080")
-    options.add_argument("--disable-features=VizDisplayCompositor")
-    return options
-
-
-def get_webdriver_service():
-    service = Service(
-        executable_path=get_chromedriver_path()
-    )
-    return service
-
 
 @st.cache_data(persist=False)
 def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
@@ -144,9 +121,9 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     print("Getting driver")
     # DRIVER = get_driver()
     # DRIVER = webdriver.Chrome(options=get_webdriver_options(), service=get_webdriver_service())
-    driver = uc.Chrome(use_subprocess=True)
-    print("Got driver!")
-    for link, data_type in LINKS.items():
+    with SB(uc=True) as DRIVER:
+        print("Got driver!")
+        for link, data_type in LINKS.items():
         progress_text = f"Loading {data_type.replace('_', ' ')} for {sym}. Please wait."
         progress_bar.progress(progress, text=progress_text)
         print("Getting", data_type)
