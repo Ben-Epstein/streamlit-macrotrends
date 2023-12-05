@@ -25,6 +25,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
+import undetected_chromedriver as uc
+
 
 
 # Fun background stuff 
@@ -141,7 +143,8 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     dfs = []
     print("Getting driver")
     # DRIVER = get_driver()
-    DRIVER = webdriver.Chrome(options=get_webdriver_options(), service=get_webdriver_service())
+    # DRIVER = webdriver.Chrome(options=get_webdriver_options(), service=get_webdriver_service())
+    driver = uc.Chrome(use_subprocess=True)
     print("Got driver!")
     for link, data_type in LINKS.items():
         progress_text = f"Loading {data_type.replace('_', ' ')} for {sym}. Please wait."
