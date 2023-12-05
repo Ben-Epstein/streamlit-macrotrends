@@ -20,6 +20,12 @@ from typing import Optional
 from time import sleep
 from seleniumbase import Driver
 
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+
 
 # Fun background stuff 
 # from PIL import Image
@@ -85,24 +91,45 @@ def extract_a_tag(html: str) -> Optional[str]:
         return None
 
 
+
+# @st.cache_resource 
+# def get_driver():
+#     os.system("rm -rf chromedriver-linux64.zip chromedriver-linux64")
+#     os.system("wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/119.0.6045.105/linux64/chromedriver-linux64.zip")
+#     os.system("unzip chromedriver-linux64.zip")
+#     print("HERE")
+#     sys.path.append(f"{os.getcwd()}/chromedriver-linux64/chromedriver")
+#     # os.system("ln -s chromedriver-linux64/chromedriver /home/adminuser/venv/bin/chromedriver")
+#     # os.system('sbase install chromedriver -p')
+#     # os.system('ln -s /usr/local/bin/chromedriver /home/appuser/venv/bin/chromedriver')
+#     # os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
+#     return Driver(browser="chrome", uc=True, headless=True)#, binary_location=get_chromedriver_path())
+#     # return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+
 @st.cache_resource(show_spinner=False)
 def get_chromedriver_path():
     return shutil.which('chromedriver')
 
 
-@st.cache_resource 
+@st.cache_resource(show_spinner=False)
+def get_webdriver_options():
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-features=NetworkService")
+    options.add_argument("--window-size=1920x1080")
+    options.add_argument("--disable-features=VizDisplayCompositor")
+    return options
+
+
 def get_driver():
-    os.system("rm -rf chromedriver-linux64.zip chromedriver-linux64")
-    os.system("wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/119.0.6045.105/linux64/chromedriver-linux64.zip")
-    os.system("unzip chromedriver-linux64.zip")
-    print("HERE")
-    sys.path.append(f"{os.getcwd()}/chromedriver-linux64/chromedriver")
-    # os.system("ln -s chromedriver-linux64/chromedriver /home/adminuser/venv/bin/chromedriver")
-    # os.system('sbase install chromedriver -p')
-    # os.system('ln -s /usr/local/bin/chromedriver /home/appuser/venv/bin/chromedriver')
-    # os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
-    return Driver(browser="chrome", uc=True, headless=True)#, binary_location=get_chromedriver_path())
-    # return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    service = Service(
+        executable_path=get_chromedriver_path()
+    )
+    return service
 
 
 @st.cache_data(persist=False)
