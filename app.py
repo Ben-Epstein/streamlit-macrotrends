@@ -7,7 +7,7 @@ import sys
 import numpy as np
 import pandas as pd
 import requests
-import streamlit as stSS
+import streamlit as st
 import base64
 from datetime import datetime, timedelta
 from selenium import webdriver
