@@ -146,7 +146,7 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
         progress_bar.progress(progress, text=progress_text)
     print("Done with loop")
     if not dfs:
-        st.warning("Cannot load dataframes...") 
+        st.warning(str(os.popen("which streamlit").read())) 
         return
     df_merged = dfs[0]
     for df_ in dfs[1:]:
