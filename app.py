@@ -131,7 +131,7 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
             print("Sleeping for 3")
             sleep(3)
             print("Awake")
-            html_content = DRIVER.page_source
+            html_content = DRIVER.get_page_source()
             st.write(f"HTML CONTENT:\n\n{html_content}\n\n")
             json_match = re.search(r'var originalData = \[(.*?)\];', html_content, re.DOTALL)
             print("Looking for table data")
