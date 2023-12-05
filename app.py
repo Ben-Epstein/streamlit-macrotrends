@@ -7,7 +7,7 @@ import sys
 import numpy as np
 import pandas as pd
 import requests
-import streamlit as st
+import streamlit as stSS
 import base64
 from datetime import datetime, timedelta
 from selenium import webdriver
@@ -129,10 +129,9 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
             print("Getting", data_type)
             DRIVER.get(link.format(symbol=sym))
             print("Sleeping for 3")
-            sleep(3)
+            sleep(5)
             print("Awake")
             html_content = DRIVER.get_page_source()
-            st.write(f"HTML CONTENT:\n\n{html_content}\n\n")
             json_match = re.search(r'var originalData = \[(.*?)\];', html_content, re.DOTALL)
             print("Looking for table data")
             if not json_match:
