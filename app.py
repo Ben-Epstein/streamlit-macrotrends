@@ -177,7 +177,7 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
         progress_bar.progress(progress, text=progress_text)
     print("Done with loop")
     if not dfs:
-        st.warning(str(shutil.which("chromedriver")) 
+        st.warning(str(shutil.which("chromedriver")))
         return
     df_merged = dfs[0]
     for df_ in dfs[1:]:
