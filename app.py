@@ -125,7 +125,7 @@ def get_webdriver_options():
     return options
 
 
-def get_driver():
+def get_webdriver_service():
     service = Service(
         executable_path=get_chromedriver_path()
     )
@@ -140,7 +140,8 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     progress_bar = st.progress(0, text=progress_text) 
     dfs = []
     print("Getting driver")
-    DRIVER = get_driver()
+    # DRIVER = get_driver()
+    DRIVER = webdriver.Chrome(options=get_webdriver_options(), service=get_webdriver_service())
     print("Got driver!")
     for link, data_type in LINKS.items():
         progress_text = f"Loading {data_type.replace('_', ' ')} for {sym}. Please wait."
