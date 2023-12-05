@@ -139,12 +139,11 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     progress = 0
     progress_bar = st.progress(0, text=progress_text) 
     dfs = []
-    st.write("Getting driver")
+    print("Getting driver")
     # DRIVER = get_driver()
     DRIVER = webdriver.Chrome(options=get_webdriver_options(), service=get_webdriver_service())
-    st.write(f"Got driver! {type(DRIVER)}")
+    print("Got driver!")
     for link, data_type in LINKS.items():
-        st.write(f"Getting {data_type}")
         progress_text = f"Loading {data_type.replace('_', ' ')} for {sym}. Please wait."
         progress_bar.progress(progress, text=progress_text)
         print("Getting", data_type)
@@ -153,6 +152,7 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
         sleep(3)
         print("Awake")
         html_content = DRIVER.page_source
+        st.write(f"HTML CONTENT:\n\n{html_content}\n\n")
         json_match = re.search(r'var originalData = \[(.*?)\];', html_content, re.DOTALL)
         print("Looking for table data")
         if not json_match:
