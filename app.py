@@ -2,6 +2,7 @@ import json
 import os
 from typing import Optional
 import shutil
+import sys
 
 import numpy as np
 import pandas as pd
@@ -95,7 +96,8 @@ def get_driver():
     os.system("wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/119.0.6045.105/linux64/chromedriver-linux64.zip")
     os.system("unzip chromedriver-linux64.zip")
     print("HERE")
-    os.system("ln -s chromedriver-linux64/chromedriver /home/adminuser/venv/bin/chromedriver")
+    sys.path.append(f"{os.getcwd()}/chromedriver-linux64/chromedriver")
+    # os.system("ln -s chromedriver-linux64/chromedriver /home/adminuser/venv/bin/chromedriver")
     # os.system('sbase install chromedriver -p')
     # os.system('ln -s /usr/local/bin/chromedriver /home/appuser/venv/bin/chromedriver')
     # os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
