@@ -110,7 +110,7 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
     dfs = []
     print("Getting driver")
     DRIVER = get_driver()
-    print("Got driver")
+    print("Got driver!")
     for link, data_type in LINKS.items():
         progress_text = f"Loading {data_type.replace('_', ' ')} for {sym}. Please wait."
         progress_bar.progress(progress, text=progress_text)
@@ -142,7 +142,10 @@ def get_stock_info(sym: str) -> Optional[pd.DataFrame]:
         print("Added", data_type)
         progress += 15
         progress_bar.progress(progress, text=progress_text)
-        
+    print("Done with loop")
+    if not dfs:
+        st.warning("Cannot load dataframes...") 
+        return
     df_merged = dfs[0]
     for df_ in dfs[1:]:
         df_merged = df_merged.merge(df_, left_index=True, right_index=True)
